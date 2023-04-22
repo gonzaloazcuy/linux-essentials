@@ -1,0 +1,706 @@
+2.4 Lección 1
+Certificación:	
+Linux Essentials
+
+Versión:	
+1.6
+
+Tema:	
+2 Encontrando tu camino en el sistema Linux
+
+Objetivo:	
+2.4 Creando, moviendo y borrando archivos
+
+Lección:	
+1 de 1
+
+Introducción
+Esta lección cubrirá la administración de archivos y directorios en Linux usando herramientas de línea de comandos.
+
+Un archivo es una colección de datos con un nombre y un conjunto de atributos. Si por ejemplo, usted tuviera que transferir algunas fotos desde su teléfono a una computadora y darles nombres un descriptivo; llegaría a tener varios archivos de imágenes con atributos como la hora la cual accedió por última vez o se modificó.
+
+Un directorio es un tipo especial de archivo utilizado para organizar otros archivos. Una buena manera de pensar en los directorios es como las carpetas que se usan para organizar papeles en un organizador de archivos, a diferencia de las carpetas de archivos de papel, usted puede mover fácilmente directorios dentro de otros directorios.
+
+La línea de comandos es la forma más efectiva de administrar archivos en un sistema Linux, ya que la shell y las herramientas de línea de comandos tienen características que hacen que su uso sea más rápido y fácil que el de un administrador gráfico de archivos.
+
+En esta sección usted usará los comandos ls, mv, cp, pwd, find, touch, rm, rmdir, echo, cat, y mkdir para administrar y organizar archivos así como directorios.
+
+Sensibilidad a las mayúsculas y minúsculas
+A diferencia de Microsoft Windows, los nombres de archivos y directorios en sistemas Linux se distinguen entre mayúsculas y minúsculas; lo que significa que los nombres /etc/ y /ETC/ son directorios diferentes:
+
+$ cd /
+$ ls
+bin   dev  home  lib64  mnt  proc  run   srv  tmp  var
+boot  etc  lib   media  opt  root  sbin  sys  usr
+$ cd ETC
+bash: cd: ETC: No such file or directory
+$ pwd
+/
+$ cd etc
+$ pwd
+/etc
+El pwd muestra el directorio en el que se encuentra actualmente, como puede observar, el cambio a /ETC no funcionó, ya que dicho directorio no existe, sin embargo el cambio al directorio /etc que sí existe tuvo éxito.
+
+Creación de directorios
+El comando mkdir se usa para crear directorios.
+
+Vamos a crear un nuevo directorio dentro de nuestro directorio home:
+
+$ cd ~
+$ pwd
+/home/user
+$ ls
+Desktop  Documents  Downloads
+$ mkdir linux_essentials-2.4
+$ ls
+Desktop  Documents  Downloads  linux_essentials-2.4
+$ cd linux_essentials-2.4
+$ pwd
+/home/emma/linux_essentials-2.4
+Durante de esta lección, todos los comandos tendrán lugar dentro de este directorio o en uno de sus subdirectorios.
+
+Para volver fácilmente al directorio de la lección desde cualquier otra ubicación puede usar el comando:
+
+$ cd ~/linux_essentials-2.4
+El shell interpreta el carácter ~ como su directorio raíz.
+
+Cuando esté en el directorio de la lección, cree más directorios que usaremos para los ejercicios, usted puede crear todos los nombres de los directorios separados por espacios con el comando mkdir:
+
+$ mkdir creating moving copying/files copying/directories deleting/directories deleting/files globs
+mkdir: cannot create directory ‘copying/files’: No such file or directory
+mkdir: cannot create directory ‘copying/directories’: No such file or directory
+mkdir: cannot create directory ‘deleting/directories’: No such file or directory
+mkdir: cannot create directory ‘deleting/files’: No such file or directory
+$ ls
+creating  globs  moving
+Observe el mensaje de error y notará que sólo se crearon moving, globs, y creating. Los directorios copying y deleting no existen todavía. Por defecto, el comando mkdir, no creará un directorio dentro de un directorio que no existe. La opción -p o --parents ordena a mkdir crear directorios padre si no existen. Intente nuevamente usar el comando mkdir, pero con la opción -p:
+
+$ mkdir -p creating moving copying/files copying/directories deleting/directories deleting/files globs
+Ahora no recibirás ningún mensaje de error. Veamos qué directorios existen ahora:
+
+$ find
+.
+./creating
+./moving
+./globs
+./copying
+./copying/files
+./copying/directories
+./deleting
+./deleting/directories
+./deleting/files
+El comando find se utiliza generalmente para buscar archivos y directorios, pero sin opciones. Su resultado mostrará un listado de todos los archivos, directorios y subdirectorios de su directorio actual.
+
+Tip
+Al listar el contenido de un directorio con ls, las opciones -t y -r son particularmente útiles. Clasifican la salida por tiempo (-t) e invierten su orden (-r). En este caso los archivos más recientes estarán en la parte inferior de la salida de comandos.
+
+Creación de archivos
+Típicamente, los archivos son creados por los programas que trabajan con los datos guardados en ellos, un archivo vacío puede ser creado usando el comando touch. Si ejecuta touch en un archivo existente, el contenido del archivo no será cambiado, pero la fecha y hora de modificación de los archivos será actualizada.
+
+Ejecute el siguiente comando para crear algunos archivos para la lección de globbing:
+
+$ touch globs/question1 globs/question2012 globs/question23 globs/question13 globs/question14
+$ touch globs/star10 globs/star1100 globs/star2002 globs/star2013
+Ahora vamos a verificar que todos los archivos existen en el directorio globs:
+
+$ cd globs
+$ ls
+question1   question14    question23  star1100  star2013
+question13  question2012  star10      star2002
+Puedes revisar el contenido de un archivo de texto con el comando cat, pruébelo en uno de los archivos que acabas de crear:
+
+$ cat question14
+Dado que touch crea archivos vacíos no debería obtener ninguna salida. Puede usar echo con > para crear archivos de texto simples. Intento esto:
+
+$ echo hello > question15
+$ cat question15
+hello
+echo muestra el texto en la línea de comandos. El carácter > instruye al shell a escribir la salida de un comando en el archivo especificado en lugar de su terminal. En este caso, la salida de echo, escribe la palabra hello en el archivo question15. Esto no es específico de echo, puede ser usado con cualquier comando.
+
+Tenga cuidado al usar > si el archivo nombrado ya existe, será sobreescrito!
+
+Cambiando el nombre de los archivos
+Los archivos se pueden mover o renombran con el comando mv.
+
+Establezca su directorio de trabajo en el directorio moving:
+
+$ cd ~/linux_essentials-2.4/moving
+Cree algunos archivos con los que pueda practicar, ya a este punto debería estar familiarizado con estos comandos:
+
+$ touch file1 file22
+$ echo file3 > file3
+$ echo file4 > file4
+$ ls
+file1  file22  file3  file4
+Supongamos que file22 es un error tipográfico y debería ser file2. Arréglalo con el comando mv. Al renombrar un archivo, el primer argumento es el nombre actual, el segundo es el nuevo nombre:
+
+$ mv file22 file2
+$ ls
+file1  file2  file3  file4
+Tenga cuidado con el comando mv. Si cambia el nombre de un archivo al nombre de un archivo existente, se sobrescribirá:
+
+$ cat file3
+file3
+$ cat file4
+file4
+$ mv file4 file3
+$ cat file3
+file4
+$ ls
+file1  file2  file3
+Observe como el contenido de file3 es ahora file4. Use la opción -i para hacer que mv le pregunte si está a punto de sobreescribir un archivo existente:
+
+$ touch file4 file5
+$ mv -i file4 file3
+mv: overwrite ‘file3’? y
+Moviendo archivos
+Los archivos se mueven de un directorio a otro con el comando mv.
+
+Cree unos cuantos directorios para mover algunos archivos:
+
+$ cd ~/linux_essentials-2.4/moving
+$ mkdir dir1 dir2
+$ ls
+dir1  dir2  file1  file2  file3  file5
+Mover file1 a dir1:
+
+$ mv file1 dir1
+$ ls
+dir1  dir2  file2  file3  file5
+$ ls dir1
+file1
+Observe como el último argumento de mv es el directorio destino. Cuando el último argumento de mv es un directorio, los archivos son movidos dentro de este; se puede especificar múltiples archivos en un solo comando mv:
+
+$ mv file2 file3 dir2
+$ ls
+dir1  dir2  file5
+$ ls dir2
+file2  file3
+También es posible usar mv para mover y renombrar directorios. Renombre dir1 a dir3:
+
+$ ls
+dir1  dir2  file5
+$ ls dir1
+file1
+$ mv dir1 dir3
+$ ls
+dir2  dir3  file5
+$ ls dir3
+file1
+Eliminando archivos y directorios
+El comando rm puede eliminar archivos y directorios. Mientras que el comando rmdir sólo puede eliminar directorios:
+
+$ cd ~/linux_essentials-2.4/moving
+$ ls
+dir2  dir3  file5
+$ rmdir file5
+rmdir: failed to remove ‘file5’: Not a directory
+$ rm file5
+$ ls
+dir2  dir3
+Por defecto rmdir sólo puede borrar directorios vacíos, por lo tanto tuvimos que usar rm para borrar un archivo regular:
+
+$ cd ~/linux_essentials-2.4/
+$ ls
+copying  creating  deleting  globs  moving
+$ rmdir deleting
+rmdir: failed to remove ‘deleting’: Directory not empty
+$ ls -l deleting
+total 0
+drwxrwxr-x. 2 emma emma 6 Mar 26 14:58 directories
+drwxrwxr-x. 2 emma emma 6 Mar 26 14:58 files
+Por defecto, rmdir no elimina un directorio que no esté vacío, utilice rmdir para eliminar uno de los subdirectorios vacíos del directorio deleting:
+
+$ ls -a deleting/files
+.  ..
+$ rmdir deleting/files
+$ ls -l deleting
+directories
+Eliminar grandes cantidades de archivos o estructuras de directorios con muchos subdirectorios puede parecer tedioso, pero en realidad es fácil. Por defecto, el comando rm sólo funciona con archivos normales, la opción -r se utiliza para anular este comportamiento, pero ¡Cuidado, rm -r podría darte un mal día! Cuando uses la opción -r, rm no sólo borrará todos los directorios, sino también todo lo que haya dentro de ese directorio, incluyendo los subdirectorios y sus contenidos:
+
+$ ls
+copying  creating  deleting  globs  moving
+$ rm deleting
+rm: cannot remove ‘deleting’: Is a directory
+$ ls -l deleting
+total 0
+drwxrwxr-x. 2 emma emma 6 Mar 26 14:58 directories
+$ rm -r deleting
+$ ls
+copying  creating  globs  moving
+Observe como deleting ha desaparecido, a pesar de que no estaba vacío? Al igual que mv, rm tiene una opción -i para avisar antes de hacer algo. Use rm -ri para eliminar directorios de la sección moving que ya no son necesarios:
+
+$ find
+.
+./creating
+./moving
+./moving/dir2
+./moving/dir2/file2
+./moving/dir2/file3
+./moving/dir3
+./moving/dir3/file1
+./globs
+./globs/question1
+./globs/question2012
+./globs/question23
+./globs/question13
+./globs/question14
+./globs/star10
+./globs/star1100
+./globs/star2002
+./globs/star2013
+./globs/question15
+./copying
+./copying/files
+./copying/directories
+$ rm -ri moving
+rm: descend into directory ‘moving’? y
+rm: descend into directory ‘moving/dir2’? y
+rm: remove regular empty file ‘moving/dir2/file2’? y
+rm: remove regular empty file ‘moving/dir2/file3’? y
+rm: remove directory ‘moving/dir2’? y
+rm: descend into directory ‘moving/dir3’? y
+rm: remove regular empty file ‘moving/dir3/file1’? y
+rm: remove directory ‘moving/dir3’? y
+rm: remove directory ‘moving’? y
+Copiando archivos y directorios
+El comando cp se utiliza para copiar archivos y directorios. Copie algunos archivos en el directorio copying:
+
+$ cd ~/linux_essentials-2.4/copying
+$ ls
+directories  files
+$ cp /etc/nsswitch.conf files/nsswitch.conf
+$ cp /etc/issue /etc/hostname files
+Si el último argumento es un directorio, cp creará una copia de los argumentos anteriores dentro de ese directorio. Al igual que mv, se puede especificar múltiples archivos a la vez siempre y cuando el objetivo sea un directorio.
+
+Cuando ambos operandos de cp son archivos y existen ambos archivos, cp sobrescribe el segundo archivo con una copia del primero:
+
+$ cd ~/linux_essentials-2.4/copying/files
+$ ls
+hostname  issue  nsswitch.conf
+$ cat hostname
+mycomputer
+$ cat issue
+Debian GNU/Linux 9 \n \l
+
+$ cp hostname issue
+$ cat issue
+mycomputer
+Ahora vamos a intentar crear una copia del directorio files dentro del directorio directories:
+
+$ cd ~/linux_essentials-2.4/copying
+$ cp files directories
+cp: omitting directory ‘files’
+Como puede observar, cp por defecto sólo funciona en archivos individuales, para copiar un directorio utilice la opción -r. Tenga en cuenta que la opción -r hará que cp también copie el contenido del directorio que está copiando:
+
+$ cp -r files directories
+$ find
+.
+./files
+./files/nsswitch.conf
+./files/fstab
+./files/hostname
+./directories
+./directories/files
+./directories/files/nsswitch.conf
+./directories/files/fstab
+./directories/files/hostname
+Observe cómo un directorio existente fue usado como destino. El comando cp crea una copia del directorio fuente dentro de él? Si el destino no existe, lo creará con el contenido del directorio fuente:
+
+$ cp -r files files2
+$ find
+.
+./files
+./files/nsswitch.conf
+./files/fstab
+./files/hostname
+./directories
+./directories/files
+./directories/files/nsswitch.conf
+./directories/files/fstab
+./directories/files/hostname
+./files2
+./files2/nsswitch.conf
+./files2/fstab
+./files2/hostname
+Globbing
+Lo que comúnmente se conoce como globbing hace referencia a un lenguaje simple de coincidencia de patrones. Los shells utilizan este lenguaje para referirse a grupos de archivos cuyos nombres coinciden con un patrón específico. POSIX.1-2017 especifica los siguientes caracteres que coinciden con un patrón:
+
+*
+Coincide con cualquier número de caracteres, incluyendo los no caracteres.
+
+?
+Coincide con cualquier carácter.
+
+[]
+Corresponde a una clase de caracteres.
+
+En español, esto significa que puede decirle a su shell que coincida con un patrón en lugar de una cadena literal de texto. Los usuarios de Linux suelen especificar varios archivos con un “glob” en lugar de escribir el nombre de cada archivo:
+
+$ cd ~/linux_essentials-2.4/globs
+$ ls
+question1   question14  question2012  star10    star2002
+question13  question15  question23    star1100  star2013
+$ ls star1*
+star10  star1100
+$ ls star*
+star10  star1100  star2002  star2013
+$ ls star2*
+star2002  star2013
+$ ls star2*2
+star2002
+$ ls star2013*
+star2013
+Shell expande * a cualquier número de caracteres, por tanto interpreta que star* significa cualquier nombre (archivo o directorio) que coincidan(al inicio) con esos caracteres. Cuando ejecutas el comando ls star*, shell no ejecuta el programa ls con un argumento de star*, sino que busca archivos en el directorio actual que concuerden con el patrón star (incluyendo sólo star). Además convierte cada archivo que coincida con el patrón en un argumento de ls:
+
+$ ls star*
+En lo que al comando ls se refiere, esto es equivalente a:
+
+$ ls star10  star1100  star2002  star2013
+El carácter * no significa nada para ls. Para probar esto ejecute el siguiente comando:
+
+$ ls star\*
+ls: cannot access star*: No such file or directory
+Cuando se precede un carácter con un \, estás instruyendo a su shell para que no lo interprete. En este caso, usted desea que ls tenga un argumento de star*.
+
+El carácter ? se expande a cualquier personaje, pruebe los siguientes comandos:
+
+$ ls
+question1   question14  question2012  star10    star2002
+question13  question15  question23    star1100  star2013
+$ ls question?
+question1
+$ ls question1?
+question13  question14  question15
+$ ls question?3
+question13  question23
+$ ls question13?
+ls: cannot access question13?: No such file or directory
+Los corchetes [] se usan para igualar rangos o clases de caracteres. Estos funcionan como lo hacen en las expresiones regulares POSIX, excepto que con globs se usa ^ en lugar de !.
+
+Cree algunos archivos para experimentar:
+
+$ mkdir brackets
+$ cd brackets
+$ touch file1 file2 file3 file4 filea fileb filec file5 file6 file7
+Los rangos entre [] corchetes se expresan mediante un -:
+
+$ ls
+file1  file2  file3  file4  file5  file6  file7  filea  fileb  filec
+$ ls file[1-2]
+file1  file2
+$ ls file[1-3]
+file1  file2  file3
+Se pueden especificar varios rangos:
+
+$ ls file[1-25-7]
+file1  file2  file5  file6  file7
+$ ls file[1-35-6a-c]
+file1  file2  file3  file5  file6  filea  fileb  filec
+Los corchetes también se pueden utilizar para hacer coincidir un conjunto específico de caracteres.
+
+$ ls file[1a5]
+file1  file5  filea
+También puede utilizar el carácter ^ como primer carácter para que coincida con todo, excepto con ciertos caracteres.
+
+$ ls file[^a]
+file1  file2  file3  file4  file5  file6  file7  fileb  filec
+Lo último que cubriremos en esta lección son las clases de caracteres. Para que coincidan con una clase de caracteres, use [:classname:]. Por ejemplo, para usar la clase de dígitos que coincida con los números, debes hacer algo como esto:
+
+$ ls file[[:digit:]]
+file1  file2  file3  file4  file5  file6  file7
+$ touch file1a file11
+$ ls file[[:digit:]a]
+file1  file2  file3  file4  file5  file6  file7  filea
+$ ls file[[:digit:]]a
+file1a
+El glob file[[:digit:]a], coincide con file seguido de un dígito o a.
+
+POSIX requiere las siguientes clases de caracteres para todas las localizaciones:
+
+[:alnum:]
+Letras y números.
+
+[:alpha:]
+Letras mayúsculas o minúsculas.
+
+[:blank:]
+Espacios y tabulaciones.
+
+[:cntrl:]
+Caracteres de control, por ejemplo, backspace, bell, NAK, escape.
+
+[:digit:]
+Números (012345456789).
+
+[:graph:]
+Caracteres gráficos (todos los caracteres excepto ctrl y el carácter de espacio)
+
+[:lower:]
+Letras minúsculas (a-z).
+
+[:print:]
+Caracteres imprimibles (alnum, punct y el carácter del espacio).
+
+[:punct:]
+Caracteres de puntuación, es decir !, &, ".
+
+[:space:]
+Caracteres de espacio en blanco, por ejemplo, tabulaciones, espacios, líneas nuevas.
+
+[:upper:]
+Letras mayúsculas (A-Z).
+
+[:xdigit:]
+Números hexadecimales (normalmente 0123456789abcdefABCDEF).
+
+Ejercicios guiados
+Dado lo siguiente, seleccione los directorios que podría crear el comando mkdir -p /tmp/outfiles/text/today /tmp/infiles/text/today
+
+$ pwd
+/tmp
+$ find
+.
+./outfiles
+./outfiles/text
+/tmp
+
+/tmp/outfiles
+
+/tmp/outfiles/text
+
+/tmp/outfiles/text/today
+
+/tmp/infiles
+
+/tmp/infiles/text
+
+/tmp/infiles/text/today
+
+¿Qué hace -v para mkdir, rm y cp?
+
+¿Qué sucede si accidentalmente intenta copiar tres archivos en la misma línea de comando a un archivo que ya existe en lugar de un directorio?
+
+¿Qué sucede cuando usa mv para mover un directorio dentro de sí mismo?
+
+¿Cómo eliminaría todos los archivos en su directorio actual que comienzan con old?
+
+¿Cuál de los siguientes archivos log_[a-z]_201?_*_01.txt coinciden?
+
+log_3_2017_Jan_01.txt
+
+log_+_2017_Feb_01.txt
+
+log_b_2007_Mar_01.txt
+
+log_f_201A_Wednesday_01.txt
+
+Cree algunos globs para que coincidan con la siguiente lista de nombres de archivo:
+
+doc100
+doc200
+doc301
+doc401
+Ejercicios exploratorios
+Utilice la página del manual cp para descubrir cómo hacer una copia de un archivo y hacer que los permisos y la hora de modificación coincidan con el original.
+
+¿Qué hace el comando rmdir -p? Pruébelo y explique cómo difiere de rm -r.
+
+NO EJECUTE REALMENTE ESTE COMANDO: ¿Qué cree que hará rm -ri /* ? (Honestamente, ¡no intentes hacer esto!)
+
+Además de usar -i. ¿Es posible evitar que mv sobrescriba los archivos de destino?
+
+Explique el comando cp -u.
+
+Resumen
+El entorno de línea de comandos de Linux proporciona herramientas para administrar archivos. Algunos de los más utilizados son cp, mv, mkdir, rm y rmdir. Estas herramientas combinadas con globs, permiten a los usuarios mejorar su trabajo.
+
+Muchos comandos tienen una opción -i que pregunta antes de hacer algo. Esto podrían ahorrarte muchos problemas si escribes algo mal.
+
+Muchos comandos tienen una opción -r. La opción -r generalmente significa recursión. En matemáticas e informática, una función recursiva es una función que se utiliza a sí misma en su definición. Cuando se trata de herramientas de línea de comandos, generalmente significa aplicar el comando a un directorio y todo lo que contiene.
+
+Comandos usados en esta lección:
+
+cat
+Muestra o concatena el contenido de ficheros.
+
+cp
+Copia archivos o directorios.
+
+echo
+Salida de texto.
+
+find
+Recorre un árbol del sistema de archivos y busca archivos que coincidan con un conjunto específico de criterios.
+
+ls
+Muestra propiedades de archivos y directorios, y enumera los contenidos de un directorio.
+
+mkdir
+Crea nuevos directorios.
+
+mv
+Mueve o renombra archivos o directorios.
+
+pwd
+Salida del directorio de trabajo actual.
+
+rm
+Eliminar archivos o directorios.
+
+rmdir
+Elimina directorios.
+
+touch
+Crea nuevos archivos vacíos o actualiza el tiempo de modificación de un archivo existente.
+
+Respuestas a los ejercicios guiados
+Dado lo siguiente, seleccione los directorios que podría crear el comando mkdir -p /tmp/outfiles/text/today /tmp/infiles/text/today
+
+$ pwd
+/tmp
+$ find
+.
+./outfiles
+./outfiles/text
+Se crearían los directorios marcados. Los directorios /tmp, /tmp/outfiles y /tmp/outfiles/text ya existen, por lo que mkdir los ignorará.
+
+/tmp
+
+/tmp/outfiles
+
+/tmp/outfiles/text
+
+/tmp/outfiles/text/today
+
+X
+
+/tmp/infiles
+
+X
+
+/tmp/infiles/text
+
+X
+
+/tmp/infiles/text/today
+
+X
+
+¿Qué hace -v para mkdir, rm y cp?
+
+Por lo general, -v activa la salida detallada. Hace que los respectivos programas muestren lo que están haciendo a la hora de ser ejecutados.
+
+$ rm -v a b
+removed 'a'
+removed 'b'
+$ mv -v a b
+'a' -> 'b'
+$ cp -v b c
+'b' -> 'c'
+¿Qué sucede si accidentalmente intenta copiar tres archivos en la misma línea de comando a un archivo que ya existe en lugar de un directorio?
+
+cp se negará a hacer la operación y generará un mensaje de error:
+
+$ touch a b c d
+$ cp a b c d
+cp: target 'd' is not a directory
+¿Qué sucede cuando usa mv para mover un directorio dentro de sí mismo?
+
+Recibirá un mensaje de error que indica que mv no podrá hacer eso.
+
+$ mv a a
+mv: cannot move 'a' to a subdirectory of itself, 'a/a'
+¿Cómo eliminaría todos los archivos en su directorio actual que comienzan con old?
+
+Usaría el glob old * con rm:
+
+$ rm old*
+¿Cuál de los siguientes archivos log_[a-z]_201?_*_01.txt coinciden?
+
+log_3_2017_Jan_01.txt
+
+log_+_2017_Feb_01.txt
+
+log_b_2007_Mar_01.txt
+
+log_f_201A_Wednesday_01.txt
+
+X
+
+$ ls log_[a-z]_201?_*_01.txt
+log_f_201A_Wednesday_01.txt
+log_ [a-z] coincide con log_ seguido de cualquier letra minúscula, por lo que tanto log_f_201A_Wednesday_01.txt como log_b_2007_Mar_01.txt coinciden. _201? coincide con cualquier carácter individual, por lo que solo log_f_201A_Wednesday_01.txt coincide. Finalmente * _01.txt coincide con todo lo que termina con _01.txt, por lo que nuestra opción restante coincide.
+
+Create a few globs to match the following list of file names:
+
+doc100
+doc200
+doc301
+doc401
+There are several solutions. Here are some of them:
+
+doc*
+doc[1-4]*
+doc?0?
+doc[1-4]0?
+Respuestas a los ejercicios exploratorios
+Utilice la página del manual cp para descubrir cómo hacer una copia de un archivo y hacer que los permisos y la hora de modificación coincidan con el original.
+
+Usaría la opción -p. Desde la página del manual dice lo siguiente:
+
+$ man cp
+-p     same as --preserve=mode,ownership,timestamps
+--preserve[=ATTR_LIST]
+              preserve the specified attributes (default: mode,ownership,time‐
+              stamps), if  possible  additional  attributes:  context,  links,
+              xattr, all
+¿Qué hace el comando rmdir -p? Pruébelo y explique cómo difiere de rm -r.
+
+Hace que rmdir se comporte de manera similar a mkdir -p. Si pasa un árbol de directorios vacíos, los eliminará a todos.
+
+$ find
+.
+./a
+./a/b
+./a/b/c
+$ rmdir -p a/b/c
+$ ls
+NO EJECUTE REALMENTE ESTE COMANDO: ¿Qué cree que hará rm -ri /* ? (Honestamente, ¡no intentes hacer esto!)
+
+Eliminará todos los archivos y directorios que pueda escribir su cuenta de usuario. Esto incluye cualquier sistema de archivos de red.
+
+Además de usar -i. ¿Es posible evitar que mv sobrescriba los archivos de destino?
+
+Sí, la opción -n o --no-clobber evita que mv sobrescriba los archivos.
+
+$ cat a
+a
+$ cat b
+b
+$ mv -n a b
+$ cat b
+b
+Explique cp -u.
+
+La opción -u hace que cp sólo copie un archivo si el destino no existe o es más antiguo que el archivo de origen.
+
+$ ls -l
+total 24K
+drwxr-xr-x 123 emma student  12K Feb  2 05:34 ..
+drwxr-xr-x   2 emma student 4.0K Feb  2 06:56 .
+-rw-r--r--   1 emma student    2 Feb  2 06:56 a
+-rw-r--r--   1 emma student    2 Feb  2 07:00 b
+$ cat a
+a
+$ cat b
+b
+$ cp -u a b
+$ cat b
+b
+$ cp -u a c
+$ ls -l
+total 12
+-rw-r--r-- 1 emma student 2 Feb  2 06:56 a
+-rw-r--r-- 1 emma student 2 Feb  2 07:00 b
+-rw-r--r-- 1 emma student 2 Feb  2 07:00 c
